@@ -1,8 +1,4 @@
-type Props = {
-    blogId: string,
-}
-
-export function ReadListTile(props : Props) {
+export function ReadListTile() {
 
     type BlogDetails = {
         name: string,

@@ -152,7 +152,7 @@ export function Home() {
                   </div>
                 </div>
               ) : (
-                readList.map((e: any) => <ReadListTile/>)
+                readList.map(() => <ReadListTile/>)
               )}
             </div>
           </div>

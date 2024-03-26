@@ -152,7 +152,7 @@ export function Home() {
                   </div>
                 </div>
               ) : (
-                readList.map((e: any) => <ReadListTile blogId={e} />)
+                readList.map((e: any) => <ReadListTile/>)
               )}
             </div>
           </div>

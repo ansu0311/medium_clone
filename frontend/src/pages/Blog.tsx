@@ -12,7 +12,6 @@ export function Blog() {
     title,
     description,
     author,
-    authorId,
     quote,
     time,
   } = useBlog({ id: routeParams.id || "" });

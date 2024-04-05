@@ -7,8 +7,8 @@ import { CreateBlog } from "./pages/CreateBlog";
 
 function App() {
   return (
-    <div className="bg-white h-screen w-screen">
-      <BrowserRouter>
+    <div className="bg-white scrollbar-none h-screen w-screen overflow-x-hidden">
+      <BrowserRouter> 
         <Routes>
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />

@@ -15,3 +15,11 @@ export function Input(props:Props) {
     </div>
   )
 }
+
+export function InputMenu(props:Props) {
+  return (
+    <div className="flex flex-col my-1 lg:my-2">
+        <input className="py-1.5 px-2 bg-[#F6DFC1] text-black placeholder:text-black/50 font-grandHotel text-xl rounded-full outline-[#FFA079] w-full" required={props.required} name="input" onChange={props.onChange}  type={props.type || "text"} placeholder={" " +props.placeholder}/>
+    </div>
+  )
+}

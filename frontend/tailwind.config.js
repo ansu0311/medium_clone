@@ -12,8 +12,13 @@ export default {
             "transform": "translateX(100%)",
           },
         },
-      }
-    },
+      },
+    fontFamily: {
+        grandHotel: ["Grand Hotel", "cursive"],
+      },
+    }
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar'),
+],
 }

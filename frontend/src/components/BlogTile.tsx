@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import CategoryTiles from "../smallComponents/HomeComponents/CategoryTiles";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   authorName: string;
@@ -11,100 +10,94 @@ type Props = {
   to: string;
 };
 
-
 export function BlogTile(props: Props) {
+  const navigate = useNavigate();
   const today = new Date(props.time);
   const month = today.toLocaleString("default", { month: "long" });
   const day = today.getDate();
   const year = today.getFullYear();
   const dateToShow = month + " " + day + ", " + year;
-  const iconSize = "h-5 w-5 text-gray-500 hover:text-black";
+  const iconSize = "h-4 w-4";
 
-      
   return (
-    <Link to= {props.to}>
-    <div className=" py-10 flex flex-col border-t-2">
-      <div className="grid grid-cols-5">
-        <div className="col-span-4 flex flex-col">
-          <div className="flex gap-2 pb-2">
-            <div className="w-8 h-8 bg-purple-500 rounded-full my-auto text-center flex flex-col justify-center text-white object-cover overflow-hidden">
-              {props.authorName[0]}
-            </div>
-            <div className="my-auto capitalize">{props.authorName}</div>
-            <div className="w-1 h-1 bg-gray-400 rounded-full my-auto"></div>
-            <div className="my-auto text-gray-500">{dateToShow}</div>
+    <div className="flex flex-col justify-between text-black bg-[#FFEFDC] w-72 h-[22rem] rounded-xl p-2">
+      <div className="flex flex-col justify-around h-2/5 px-1">
+        <div className=" text-lg font-medium leading-6 py-1 capitalize">
+          {props.blogTitle}
+        </div>
+        <div className="flex font-medium gap-2 text-xs">
+          <div className="flex gap-0.5">
+            <span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className={iconSize}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
+                />
+              </svg>
+            </span>
+            <span className="my-auto">{dateToShow}</span>
           </div>
-          <div className="font-bold text-2xl py-1">{props.blogTitle}</div>
-          <div className="text-lg line-clamp-3 mb-8">
-            {props.blogDescription}
-          </div>
-          <div className="flex justify-between pr-4">
-            <div className="flex gap-3 text-sm">
-              <CategoryTiles title={props.blogCategory} />
-              <div className="text-gray-500 my-auto">{`${Math.ceil(props.blogDescription.length / 120)}`} min read</div>
-              <div className="text-gray-500 my-auto">Selected for You</div>
-            </div>
-            <div className="flex gap-3">
-              <div id="save to watchlist" className="my-auto">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className={iconSize}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
-                  />
-                </svg>
-              </div>
-              <div id="not Intrested" className="my-auto">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className={iconSize}
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                  />
-                </svg>
-              </div>
-              <div id="more menu" className="my-auto">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className={iconSize}
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                  />
-                </svg>
-              </div>
-            </div>
+          <div className="flex">
+            <span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className={iconSize}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                />
+              </svg>
+            </span>
+            <span className="my-auto">{"10k"}</span>
           </div>
         </div>
-        <div className="col-span-1 w-40 h-32 relative  mt-10">
-          <img
-            src={props.blogImage}
-            alt="blogimage"
-            className="bg-purple-300 w-full h-full object-center overflow-hidden rounded object-cover"
-          />
+        <div className="text-sm leading-4">{"Short para"}</div>
+        <div className=" relative">
+          <button
+            onClick={() => navigate(props.to)}
+            className="bg-[#FFEFDC] rounded-xl text-lg font-bold -ml-3 px-2 py-2 absolute"
+          >
+            <div className="flex justify-center bg-transparent border-2 hover:text-white border-black hover:bg-[#FFA079] hover:border-[#FFA079] px-2 py-2 rounded-2xl">
+              <div>Read Article</div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="my-auto w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                />
+              </svg>
+            </div>
+          </button>
         </div>
       </div>
+      <div className="w-full h-3/5 rounded-lg overflow-hidden">
+        <img
+          src={props.blogImage}
+          alt="blogimage"
+          className="bg-[#FFA079]/80 w-full h-full object-center overflow-hidden rounded object-cover"
+        />
+      </div>
     </div>
-    </Link>
   );
 }

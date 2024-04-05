@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "Grand Hotel";
+    src: url("./assets/GrandHotel-Regular.ttf");
+}

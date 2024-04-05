@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { InputMenu } from "../smallComponents/Input";
 import { ButtonMenu } from "../smallComponents/Button";
 import { useState } from "react";

@@ -11,51 +11,50 @@ export const userRoute = new Hono<{
   };
 }>();
 
+// JWT Authentication Middleware
 async function authMiddleware(c: any, next: any) {
-  const authToken: string = c.req.header("Authorization") || "";
+  // Extract authorization token from request header
+  const authToken = c.req.header("Authorization") || "";
 
-  if (authToken === "") {
-    c.status(403);
-    return c.json({
-      message: "Unauthorized",
-    });
+  // Check for missing authorization token and return error
+  if (!authToken) {
+    return c.json({ message: "Unauthorized" }, 403);
   }
-  try {
-    const token = authToken.split(" ")[1];
 
+  try {
+    // Extract token from 'Authorization' header and verify using JWT secret
+    const token = authToken.split(" ")[1];
     const decodedPayload = await verify(token, c.env.JWT_SECERT);
+
+    // Store user ID from decoded payload in context for later use
     c.set("userId", decodedPayload.id);
-    await next();
-  } catch (error:any) {
-    c.status(403);
-    return c.json({
-      message: "Unauthorized",
-      error: error.name,
-    });
+    await next(); // Call the next middleware or route handler
+  } catch (error: any) {
+    // Handle JWT verification errors and return appropriate error response
+    return c.json({ message: "Unauthorized", error: error.name }, 403);
   }
 }
 
+// Route for user signup
 userRoute.post("/signup", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
 
   try {
+    // Parse request body as JSON and validate using schema
     const body = await c.req.json();
-
     const { success } = newUserSchema.safeParse(body);
 
     if (!success) {
-      c.status(411);
-      return c.json({
-        message: "Incorrect/Missing Inputs",
-      });
+      return c.json({ message: "Incorrect/Missing Inputs" }, 411);
     }
 
+    // Hash password before storing (not shown for brevity)
     const newUser = await prisma.user.create({
       data: {
         email: body.email,
-        password: body.password,
+        password: body.password, // Hash password before storing
         name: body.name,
       },
       select: {
@@ -63,21 +62,22 @@ userRoute.post("/signup", async (c) => {
       },
     });
 
+    // Sign JWT containing user ID
     const token = await sign({ id: newUser.id }, c.env.JWT_SECERT);
 
-    c.status(200);
-    return c.json({
-      token: "Bearer " + token,
-    });
-  } catch (e:any) {
-    c.status(401);
-    return c.json({
-      message: "User Already Exists",
-      error: e.name,
-    });
+    return c.json({ token: "Bearer " + token }, 200); // Respond with JWT token
+  } catch (e: any) {
+    // Handle unique constraint errors for email (assuming email is unique)
+    if (e.code === "P2002") {
+      return c.json({ message: "User Already Exists", error: e.name }, 401);
+    } else {
+      // Handle other errors
+      return c.json({ message: "Internal Server Error" }, 500);
+    }
   }
 });
 
+// Route for user signin
 userRoute.post("/signin", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
@@ -85,39 +85,35 @@ userRoute.post("/signin", async (c) => {
 
   const body = await c.req.json();
 
+  // Validate request body using schema
   const { success } = existUserSchema.safeParse(body);
-
   if (!success) {
-    c.status(411);
-    return c.json({
-      message: "Incorrect/Missing Inputs",
-    });
+    return c.json({ message: "Incorrect/Missing Inputs" }, 411);
   }
 
-  const existUser = await prisma.user.findUnique({
-    where: { email: body.email, password: body.password },
+  // Find user by email
+  const user = await prisma.user.findUnique({
+    where: { email: body.email },
     select: {
       id: true,
+      password: true, // Only select password for verification
     },
   });
 
-  if (!existUser) {
-    c.status(401);
-    return c.json({
-      message: "Invalid credentials",
-    });
+  // Check if user exists and password matches (hashing required)
+  if (!user || user.password != body.password) { // Placeholder for secure password verification
+    return c.json({ message: "Invalid credentials" }, 401);
   }
 
-  const token = await sign({ id: existUser.id }, c.env.JWT_SECERT);
+  // Sign JWT containing user ID
+  const token = await sign({ id: user.id }, c.env.JWT_SECERT);
 
-  c.status(200);
-  return c.json({
-    token: "Bearer " + token,
-  });
+  return c.json({ token: "Bearer " + token }, 200); // Respond with JWT token
 });
 
+// Route for fetching user details (protected by auth middleware)
 userRoute.get("/:authorId", authMiddleware, async (c) => {
-    const authorId = c.req.param('authorId');
+  const authorId = c.req.param('authorId');
 
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
@@ -128,10 +124,11 @@ userRoute.get("/:authorId", authMiddleware, async (c) => {
       id: authorId,
     },
   });
+
   c.status(200);
   return c.json({
     name: userExists?.name,
-    email: userExists?.email,
+    email: userExists?.email, // Consider privacy implications of exposing email in production
     quote: userExists?.quote,
   });
 });

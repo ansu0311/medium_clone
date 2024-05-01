@@ -1,8 +1,13 @@
+// Import necessary modules
 import { Hono } from "hono";
-import { userRoute } from "./userRoute";
-import { blogRoute } from "./blogRoute";
+import { userRoute } from "./userRoute"; // Import user route handler
+import { blogRoute } from "./blogRoute";  // Import blog route handler
 
-export const mainRoute = new Hono()
+// Create a new Hono instance
+export const mainRoute = new Hono();
 
-mainRoute.route('/user',userRoute)
-mainRoute.route('/blog',blogRoute)
+// Mount user route handler onto '/user' path
+mainRoute.route('/user', userRoute);
+
+// Mount blog route handler onto '/blog' path
+mainRoute.route('/blog', blogRoute);
